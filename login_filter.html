@@ -99,7 +99,7 @@
             text-indent: 2em;
             font: bold 18px/40px "微软雅黑";
             border-bottom: 1px solid;
-            overflow: auto;
+            overflow: hidden;
         }
         
         #user_name_example li:hover {
@@ -139,6 +139,10 @@
                 <input id="seller_psw" type="password" name="user_name" value="" placeholder="请输入个人用户密码">
             </div>
         </div>
+    </div>
+
+    <div id="hashTest" style="width:100px;height:100px;background:gray;">
+
     </div>
 
     <script>
@@ -204,6 +208,18 @@
                 }
             }
         }()
+        //测试其他东西
+        var hashTest = document.getElementById('hashTest');
+        hashTest.onclick = function() {
+            setTimeout(function(that) {
+                window.location.hash = "yellow";
+            }, 1000, this);
+
+        }
+        window.onhashchange = function() {
+            hashTest.style.background = location.hash.substr(1)
+            console.log(location.hash)
+        }
     </script>
 
 
