@@ -14,6 +14,7 @@
             background-color: gray;
             margin: 150px auto;
         }
+        /*tab标签样式*/
         
         .tab_1,
         .tab_2 {
@@ -26,6 +27,12 @@
             text-align: center;
             line-height: 40px;
         }
+        /*tab标签点击样式*/
+        
+        .tab_active {
+            background-color: yellow;
+        }
+        /*tab下面主要内容样式*/
         
         .login_tab_1,
         login_tab_2 {
@@ -42,12 +49,15 @@
             align-items: center;*/
         }
         
-        login_tab_2 {
+        .login_tab_2 {
             display: none;
         }
+        /*输入框样式*/
         
         .login_tab_1 #user_name,
-        .login_tab_1 #user_psw {
+        .login_tab_1 #user_psw,
+        .login_tab_2 #seller_name,
+        .login_tab_2 #seller_psw {
             height: 40px;
             width: 300px;
             margin: 20px auto;
@@ -55,7 +65,8 @@
             font: bold 18px/40px "微软雅黑";
         }
         
-        .login_tab_1 .login_wrap {
+        .login_tab_1 .login_wrap,
+        .login_tab_2 .login_wrap {
             position: relative;
             width: 350px;
             height: 300px;
@@ -67,7 +78,8 @@
             text-indent: 2em;
         }
         
-        #user_name_example {
+        #user_name_example,
+        #seller_name_example {
             position: absolute;
             display: none;
             top: 150px;
@@ -109,52 +121,88 @@
 
 <body>
     <div class="container">
-        <div class="tab_1 ">企业用户登录</div>
-        <div class="tab_2 ">个人用户登录</div>
-        <div class="login_tab_1 ">
+        <div class="tab_1" id="login_tab1">企业用户登录</div>
+        <div class="tab_2" id="login_tab2">个人用户登录</div>
+        <div class="login_tab_1 " id="login_tab_1">
             <div class="login_wrap">
                 <input id="user_name" type="text" name="user_name" value="" placeholder="请输入用户名">
                 <ul id="user_name_example">
                 </ul>
-                <input id="user_psw" type="password" name="user_name" value="" placeholder="请输入用户名">
+                <input id="user_psw" type="password" name="user_name" value="" placeholder="请输入用户密码">
             </div>
         </div>
-        <div class="login_tab_2 "></div>
+        <div class="login_tab_2 " id="login_tab_2">
+            <div class="login_wrap">
+                <input id="seller_name" type="text" name="user_name" value="" placeholder="请输入用户名">
+                <ul id="seller_name_example">
+                </ul>
+                <input id="seller_psw" type="password" name="user_name" value="" placeholder="请输入用户密码">
+            </div>
+        </div>
     </div>
+
     <script>
         ! function() {
+            // 获取两个tab标签  
+            var tab1Dom = document.getElementById('login_tab1');
+            var tab2Dom = document.getElementById('login_tab2');
+            // 获取两个tab标签对应的div
+            var loginTab1 = document.getElementById('login_tab_1');
+            var loginTab2 = document.getElementById('login_tab_2');
+            // 给两个tab标签绑定点击事件
+            tab1Dom.addEventListener("click", function() {
+                loginTab1.style.display = "block";
+                loginTab2.style.display = "none";
+            });
+            tab2Dom.addEventListener("click", function() {
+                loginTab1.style.display = "none";
+                loginTab2.style.display = "block";
+            });
+            // 获取用户名的dom
             var userNameDom = document.getElementById('user_name');
+            // 获取模板ul的dom
             var userNameExampleDom = document.getElementById("user_name_example");
+            // 事件委派给所有li的父元素
             userNameExampleDom.addEventListener("click", function(ev) {
                 ev = ev || event;
                 userNameDom.value = ev.target.innerText;
                 this.style.display = "none";
             });
-            var tamplate = ['qq.com', '163.com', '136.com', '126.com', 'sina.com'];
-            userNameDom.addEventListener('input', function(ev) {
+            // 定义用户名模板
+            var tamplate = ['qq.com', '163.com', '136.com', '126.com', 'sina.com', 'lihao.com'];
+            // 给用户名Dom绑定点击监听
+            userNameDom.addEventListener('input', inputCbk);
+            // 点击监听回调函数
+            function inputCbk(ev) {
                 // this.value = this.value.search('@') + 1 ? this.value.substring(this.value.search("@"), 0) + '@' : this.value;
-                this.value = this.value.toLowerCase();
+                // 让当前输入框中的所有字符变成小写 并且 去除所有空格
+                this.value = this.value.toLowerCase().replace(/\s+/g, "");
+                // 遍历数组元素 先判断输入框有没有@符号 有的话取出@符号前面所有的字符拼接个@ 上去为了防止用户多输入@ 如果没有@符号的话直接拼接@  
+                // map 遍历数组 把callback返回的值push进一个新的数组
                 var tamplateArr = tamplate.map(function(item, index) {
                     return this.value !== "" ? this.value.search('@') + 1 ? this.value.substring(this.value.search("@"), 0) + "@" + item : this.value + "@" + item : "";
                 }, this);
-                // console.log(tamplateArr);
-                var tamplateArrFilter = tamplateArr.filter(function(item, index) {
+                // 对上面遍历返回的数组进行过滤 把包含输入框里面字符的项过滤出来添加进一个新的数组
+                // filter 遍历数组 吧callback的返回值转化为boolean 如果为true 就把当前item添加进新的数组中
+                var tamplateArrFilter = tamplateArr.filter(function(item) {
                         return item.search(this.value) + 1
                     }, this)
-                    // console.log(tamplateArrFilter)
-
+                    // 过滤结束 tamplateArrFilter数组中的元素就是要的正确数据
+                    // 定义一个字符串 最后会innerHTML进ul中
                 var ulHtml = "";
+                // 遍历数组 取出所有的item 拼接html字符串
                 tamplateArrFilter.forEach(function(item) {
                     ulHtml += '<li>' + item + '</li>'
                 })
                 console.log(tamplateArrFilter.length)
+                    // 判断 当当前输入框为空的话 或者 过滤后的数组中没有内容的话 就把模板ul display：none 否则就把拼接好的HTML字符串innerHTML进ul中
                 if (this.value == "" || tamplateArrFilter.length == 0) {
                     userNameExampleDom.style.display = "none";
                 } else {
                     userNameExampleDom.style.display = "block";
                     userNameExampleDom.innerHTML = ulHtml;
                 }
-            });
+            }
         }()
     </script>
 
