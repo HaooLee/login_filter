@@ -1,0 +1,126 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #canvas {
+            display: block;
+            margin: auto;
+            border: 1px solid;
+        }
+        
+        div {
+            width: 100px;
+            height: 100px;
+            background-color: green
+        }
+    </style>
+</head>
+
+<body>
+    <br>
+
+    <input type="file" name="" value="nimabi" multiple accept=".txt,.jpg">
+    <input type="button" value="dianwo ">
+    <button type="button" accesskey="F11" >dianow</button>
+
+    <canvas id="canvas" width="600" height="400"></canvas>
+    <div id="box">
+
+    </div>
+    <img width="50" height="50" src="./bird1.jpg" alt="liao" id="bird">
+    <script>
+        var cvs = document.getElementById("canvas");
+        var bird = document.getElementById("bird");
+        var ctx = cvs.getContext('2d');
+        ctx.fillStyle = "red";
+        ctx.fillRect(0, 0, 100, 100);
+
+        ctx.drawImage(bird, 0, 0, 100, 100)
+            // var pic = bird.toDataURL('image/png');
+            // var boxPic = box.toDataURL('image/png');
+            // console.log(boxPic, "=========");
+
+
+
+
+        var ipt = document.getElementsByTagName("input");
+        var ipt1 = ipt[0];
+        var ipt2 = ipt[1];
+        ipt2.onclick = function() {
+            console.log(ipt1.files);
+            console.log("123")
+        }
+
+
+        console.log(bird);
+    </script>
+</body>
+
+</html>-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <style type="text/css">
+        #preview,
+        .img,
+        img {
+            width: 200px;
+            height: 200px;
+        }
+        
+        #preview {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="preview"></div>
+    <input type="file" onchange="preview(this)" />
+    <script type="text/javascript">
+        // function preview(file) {
+        //     var prevDiv = document.getElementById('preview');
+        //     if (file.files && file.files[0]) {
+        //         var reader = new FileReader();
+        //         reader.readAsDataURL(file.files[0]);
+        //         reader.onload = function(ev) {
+        //             console.log(ev)
+        //             prevDiv.innerHTML = '<img src="' + ev.target.result + '" />';
+        //         }
+        //     } else {
+        //         prevDiv.innerHTML = '<div class="img" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.value + '\'"></div>';
+        //     }
+        // }
+        var arr = ["a", "b", "c", "d"]
+        var obj = {
+            a: {
+                b: {
+                    c: {
+                        d: "123"
+                    },
+                    e: [321, 456]
+                }
+            }
+        }
+
+        function formatText(str, obj) {
+            return str.replace(/<%([0-9a-zA-Z\.]+)%>/g, function($1, $2) {
+                var keys = $2.split('.')
+                    //console.log(keys, $1, $2)
+                return (function getVal(obj, arr, index = 0) {
+                    return arr.length == index + 1 ? obj[arr[index]] : getVal(obj[arr[index]], arr, index + 1)
+                })(obj, keys)
+            })
+        }
+        var tamplate = '<div><%a.b.e.1%></div><div><%a.b.c.d%></div>'
+        console.log(formatText(tamplate, obj));
+    </script>
+</body>
+
+</html>
